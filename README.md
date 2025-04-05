@@ -16,6 +16,13 @@ This repository contains my personal solutions to LeetCode problems in **Kotlin*
     - Time/space complexity
     - Explanation (in comments)
 
+## 📊 LeetCode Stats
+[![LeetCode Profile](https://img.shields.io/badge/LeetCode-Jamie123-orange?style=flat-square&logo=leetcode)](https://leetcode.com/jamie10x/)
+
+<!--START_SECTION:leetcode-->
+<!--END_SECTION:leetcode-->
+
+
 ### 🛠️ How to Run
 This project uses Gradle and Kotlin. To run all tests:
 
