@@ -2,7 +2,7 @@ name: 🔔 Daily LeetCode Reminder
 
 on:
   schedule:
-    - cron: "30 23 * * *"  # ⏰ 8:30 AM KST daily
+    - cron: "30 23 * * *"  # 8:30 AM KST
   workflow_dispatch:
 
 jobs:
@@ -39,15 +39,15 @@ jobs:
 
           echo "Generating issue body..."
           BODY=$(cat <<EOF
-  Hi @jamie10x 👋
-  Time to grind! Solve at least **1 LeetCode problem** today 🚀
+Hi @jamie10x 👋  
+Time to grind! Solve at least **1 LeetCode problem** today 🚀
 
-### 🔀 Suggested Problem of the Day:
-  **[$NAME]($URL)** — _${DIFFICULTY}_
-  
-  Leave a comment below with what you solved! 🎯
-  EOF
-  )
+### 🔀 Suggested Problem of the Day:  
+**[$NAME]($URL)** — _${DIFFICULTY}_
 
-echo "Creating issue: $TITLE"
-  gh issue create --title "$TITLE" --body "$BODY" --label "daily"
+Leave a comment below with what you solved! 🎯
+EOF
+)
+
+          echo "Creating issue: $TITLE"
+          gh issue create --title "$TITLE" --body "$BODY" --label "daily"
