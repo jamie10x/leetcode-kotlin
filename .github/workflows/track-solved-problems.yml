@@ -1,0 +1,47 @@
+name: 📈 Track Solved LeetCode Problems
+
+on:
+  push:
+    paths:
+      - 'problems/**/*.kt'
+
+jobs:
+  log-solved:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python (used for markdown generation)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Extract and Log Problems
+        run: |
+          mkdir -p progress
+          WEEK=$(date -u +"%Y-W%V")
+          FILE="progress/${WEEK}.md"
+          DATE=$(date -u +"%Y-%m-%d")
+
+          echo "# 🗓 Week ${WEEK##*-} Summary – ${DATE}" > $FILE
+          echo "" >> $FILE
+          echo "| Date | Problem | Difficulty |" >> $FILE
+          echo "|------|---------|------------|" >> $FILE
+
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "^problems/" | while read file; do
+            FILENAME=$(basename "$file" .kt)
+            DIFFICULTY=$(echo "$file" | cut -d'/' -f2)
+            SLUG=$(echo "$FILENAME" | sed -E 's/([A-Z])/-\L\1/g' | sed 's/^-//' | tr '_' '-' | tr ' ' '-' | tr -s '-')
+            LINK="https://leetcode.com/problems/$SLUG"
+
+            echo "| $DATE | [$FILENAME]($LINK) | ${DIFFICULTY^} |" >> $FILE
+          done
+
+      - name: Commit log
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add progress/
+          git commit -m "🧾 Log solved problems for ${WEEK}" || echo "No changes to commit"
+          git push

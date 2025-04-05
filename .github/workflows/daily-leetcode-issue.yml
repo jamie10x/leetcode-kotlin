@@ -1,0 +1,50 @@
+name: 🔔 Daily LeetCode Reminder
+
+on:
+  schedule:
+    - cron: "30 23 * * *"  # 8:30 AM KST
+  workflow_dispatch:
+
+jobs:
+  create-daily-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Random Problem & Create Issue
+        run: |
+          TODAY=$(date -u +"%Y-%m-%d")
+          TITLE="🧠 Daily LeetCode Challenge – $TODAY"
+
+          # Fetch all non-premium problems
+          curl -s https://leetcode.com/api/problems/all/ -o problems.json
+          TOTAL=$(jq '.stat_status_pairs | length' problems.json)
+          RAND_INDEX=$(( RANDOM % TOTAL ))
+
+          for i in $(seq 0 $((TOTAL - 1))); do
+            PAID=$(jq ".stat_status_pairs[$i].paid_only" problems.json)
+            if [ "$PAID" = "false" ]; then
+              RAND=$i
+              break
+            fi
+          done
+
+          NAME=$(jq -r ".stat_status_pairs[$RAND].stat.question__title" problems.json)
+          SLUG=$(jq -r ".stat_status_pairs[$RAND].stat.question__title_slug" problems.json)
+          DIFFICULTY_LEVEL=$(jq ".stat_status_pairs[$RAND].difficulty.level" problems.json)
+          if [ "$DIFFICULTY_LEVEL" -eq 1 ]; then DIFFICULTY="Easy"; fi
+          if [ "$DIFFICULTY_LEVEL" -eq 2 ]; then DIFFICULTY="Medium"; fi
+          if [ "$DIFFICULTY_LEVEL" -eq 3 ]; then DIFFICULTY="Hard"; fi
+          URL="https://leetcode.com/problems/$SLUG"
+
+          BODY="Hi @jamie10x 👋
+  Time to grind! Solve at least **1 LeetCode problem** today 🚀
+
+### 🔀 Suggested Problem of the Day:
+  **[$NAME]($URL)** — _${DIFFICULTY}_
+  
+  Leave a comment below with what you solved! 🎯"
+
+echo "Creating issue: $TITLE"
+  
+  gh issue create --title "$TITLE" --body "$BODY" --label "daily"
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
