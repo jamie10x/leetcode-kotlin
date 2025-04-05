@@ -2,7 +2,7 @@ name: 🧠 Update LeetCode Stats
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Runs every day at midnight UTC
+    - cron: "0 0 * * *"  # Daily at midnight UTC
   workflow_dispatch:
 
 jobs:
@@ -11,8 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Update LeetCode Card in README
+      - name: Inject LeetCode card into README
         run: |
-          echo "## 📊 LeetCode Stats" > README.md
-          echo "" >> README.md
-          echo "![LeetCode Stats](https://leetcard.jacoblin.cool/jamie10x?theme=dark&ext=contest)" >> README.md
+          awk '/<!--LEETCODE-START-->/ { print; print "![LeetCode Stats](https://leetcard.jacoblin.cool/jamie10x?theme=dark&ext=contest)"; in_block=1; next }
+               /<!--LEETCODE-END-->/ { in_block=0 }
+               !in_block' README.md > temp && mv temp README.md
+
+      - name: Commit and push
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add README.md
+          git commit -m "Update LeetCode stats card" || echo "No changes to commit"
+          git push
