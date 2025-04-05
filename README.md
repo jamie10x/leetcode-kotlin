@@ -27,6 +27,7 @@ This repository contains my personal solutions to LeetCode problems in **Kotlin*
 [![LeetCode Profile](https://img.shields.io/badge/LeetCode-jamie10x-orange?style=flat-square&logo=leetcode)](https://leetcode.com/jamie10x/)
 
 <!--LEETCODE-START-->
+![LeetCode Stats](https://leetcard.jacoblin.cool/jamie10x?theme=dark&ext=contest)
 <!--LEETCODE-END-->
 
 > ⏱ Auto-updated daily via [GitHub Actions](https://github.com/features/actions)
