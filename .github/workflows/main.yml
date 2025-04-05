@@ -2,7 +2,7 @@ name: 🧠 Update LeetCode Stats
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Runs daily at midnight UTC
+    - cron: "0 0 * * *"  # Runs every day at midnight UTC
   workflow_dispatch:
 
 jobs:
@@ -11,9 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Generate LeetCode stats card
-        uses: realpenguin7/leetcode-stats-card@main
-        with:
-          username: jamie10x
-          theme: dark  # or "light", "unicorn", "ocean", etc.
-          markdown_file: README.md
+      - name: Update LeetCode Card in README
+        run: |
+          echo "## 📊 LeetCode Stats" > README.md
+          echo "" >> README.md
+          echo "![LeetCode Stats](https://leetcard.jacoblin.cool/jamie10x?theme=dark&ext=contest)" >> README.md
