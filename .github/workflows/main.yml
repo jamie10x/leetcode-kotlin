@@ -2,15 +2,18 @@ name: 🧠 Update LeetCode Stats
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # daily
-  workflow_dispatch:      # allow manual trigger
+    - cron: "0 0 * * *"  # Runs daily at midnight UTC
+  workflow_dispatch:
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
     steps:
-      - name: Update LeetCode Stats
-        uses: nileshgulia1/leetcode-stats@master
+      - uses: actions/checkout@v3
+
+      - name: Generate LeetCode stats card
+        uses: realpenguin7/leetcode-stats-card@main
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          leetcode_username: jamie10x
+          username: jamie10x
+          theme: dark  # or "light", "unicorn", "ocean", etc.
+          markdown_file: README.md
